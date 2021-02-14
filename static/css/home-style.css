@@ -1,0 +1,10 @@
+.hero-image{
+    background-image:url("/static/image/nimg.ws.126.jpg");
+    background-color:#cccccc;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:cover;
+}
+.hero-text{
+
+}

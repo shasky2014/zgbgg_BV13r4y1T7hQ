@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/home-style.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap/css/bootstrap.min.css') }}" crossorigin="anonymous">
+		<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+		<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+
+
+		<meta charset="UTF-8">
+
+		<title>{% block title %} {% endblock %}</title>
+	</head>
+	<body>
+		<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+		<script src="{{ url_for('static',filename='bootstrap/js/bootstrap.min.js') }}" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+		<div class="container" style="background-color: #aaaa7f">
+			{% block body %} {% endblock %}
+		</div>
+
+	</body>
+</html>
