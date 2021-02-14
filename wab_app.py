@@ -20,11 +20,19 @@ class idols(db.Model):
     age = db.Column(db.Integer)
     shows = db.Column(db.String(200))
 
-    def __init__(self, name, height, age, shows):
+
+    def __init__(self, name=None, height=None, age=None, shows=None):
         self.name = name
         self.height = height
         self.age = age
         self.shows = shows
+
+    def __str__(self):
+        return json.dumps({'name': self.name,
+                           'height': self.height,
+                           'age': self.age,
+                           'shows': self.shows,
+                           })
 
 
 @app.route('/table/')
@@ -42,6 +50,8 @@ def hello(name=None):
 def home():
     all_info = idols.query.all()
     return render_template('home.html', idols=all_info)
+
+
 @app.route('/bootstrap')
 def bootstrap_demo():
     return render_template('bootstrap.html')
