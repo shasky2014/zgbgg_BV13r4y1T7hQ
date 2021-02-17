@@ -1,0 +1,142 @@
+<!--
+<link rel="stylesheet" href="{{ url_for('static',filename='layui/css/layui.css') }}" media="all">
+<script src="{{ url_for('static',filename='layui/layui.js') }}" crossorigin="anonymous"></script>
+url: "{{ url_for('select') }}",
+					cols: [
+						[{
+								checkbox: true,
+								fixed: true
+							}, {
+								field: 'id',
+								title: '',
+								sort: true
+							}, {
+								field: 'name',
+								title: '名字'
+							}, {
+								field: 'height',
+								title: '身高'
+							}, {
+								field: 'age',
+								title: '年龄'
+							}, {
+								field: 'shows',
+								title: '当前表演'
+							}
+							//,{title: '财富', sort: true, width:135}
+						]
+					],
+ -->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Layui</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="{{ url_for('static',filename='layui/css/layui.css') }}" media="all">
+	</head>
+	<body>
+
+		<div class="demoTable">
+			<label>ID</label>
+			<div class="layui-inline">
+				<input class="layui-input" name="id" id="demoReload" autocomplete="off">
+			</div>
+			<label>年龄</label>
+			<div class="layui-inline">
+				<input class="layui-input" name="age" id="age" autocomplete="off">
+			</div>
+
+			<button class="layui-btn" data-type="reload">搜索</button>
+		</div>
+
+		<table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>
+
+
+		<script src="{{ url_for('static',filename='layui/layui.js') }}" crossorigin="anonymous"></script>
+		<script>
+			layui.use('table', function() {
+				var table = layui.table;
+
+				//方法级渲染
+				table.render({
+					elem: '#LAY_table_user',
+					url: "{{ url_for('select') }}",
+					cols: [
+						[{
+								field: 'id',
+								title: 'ID',
+								sort: true
+							}, {
+								field: 'name',
+								title: '名字'
+							}, {
+								field: 'height',
+								title: '身高'
+							}, {
+								field: 'age',
+								title: '年龄'
+							}, {
+								field: 'shows',
+								title: '当前表演'
+							}, {
+								title: '',
+								field:'dl',width:120,
+								templet:function(d){
+									return '<button type="button" class="layui-btn layui-btn-warning layui-btn-xs" data-toggle="modal" data-target="#updata_'+d.id
+									+'">编辑</button><a href="/delete/'+d.id+'" type="button" class="layui-btn layui-btn-danger layui-btn-xs">删除</a>'
+									
+									+'<div class="modal fade" id="updata_'+d.id +'" tabindex="-1" aria-labelledby="exampleModalLabel"'
+									+' aria-hidden="true">'
+									+'<div class="modal-dialog">'
+									+'<div class="modal-content">'
+									+'<div class="modal-header">'
+									+'<h5 class="modal-title" id="exampleModalLabel">修改</h5>'
+									+'<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+									+'<div class="modal-body">'
+									+'<form action="'+"{{ url_for('update') }}"+'" method="POST">'
+									+'<input type="hidden" class="form-contorl" name="id" value="'+d.id+'">'
+									+'<div class="form-group"><label>名字:</label><input type="text" class="form-control" name="name" value="'+d.name+'"></div>'
+									+'<div class="form-group"><label>身高:</label><input type="text" class="form-control" name="height" value="'+d.height+'"></div>'
+									+'<div class="form-group"> <label>年龄:</label> <input type="text" class="form-control" name="age" value="'+d.age+'"> </div>'
+									+'<div class="form-group"> <label>show:</label> <input type="text" class="form-control" name="shows" value="'+d.shows+'"> </div>'			
+									+'<div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button> <button type="submit" class="btn btn-primary">修改</button> </div>'				
+									+''	
+									+'</form> </div> </div> </div> </div>'
+								}}
+						]
+					],
+					id: 'testReload',
+					page: true
+				});
+
+				var $ = layui.$,
+					active = {
+						reload: function() {
+							var demoReload = $('#demoReload');
+							var age = $('#age');
+							//执行重载
+							table.reload('testReload', {
+								page: {
+									curr: 1 //重新从第 1 页开始
+								},
+								where: {
+									id: demoReload.val(),
+									age: age.val()
+								}
+							}, 'data');
+						}
+					};
+
+				$('.demoTable .layui-btn').on('click', function() {
+					var type = $(this).data('type');
+					active[type] ? active[type].call(this) : '';
+				});
+			});
+		</script>
+
+	</body>
+</html>

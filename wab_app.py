@@ -20,7 +20,6 @@ class idols(db.Model):
     age = db.Column(db.Integer)
     shows = db.Column(db.String(200))
 
-
     def __init__(self, name=None, height=None, age=None, shows=None):
         self.name = name
         self.height = height
@@ -52,6 +51,13 @@ def home():
     return render_template('home.html', idols=all_info)
 
 
+@app.route('/home_layui')
+def home_layui():
+    # all_info = idols.query.all()
+    # , idols=all_info
+    return render_template('home-layui.html')
+
+
 @app.route('/bootstrap')
 def bootstrap_demo():
     return render_template('bootstrap.html')
@@ -68,6 +74,39 @@ def modal_demo():
         print(request)
     return redirect(url_for('home'))
     pass
+
+
+@app.route('/select', methods=['GET', 'POST'])
+def select():
+    print('select', 1, request.method)
+    if request.method == 'POST':
+        print(request.path)
+        print(request.data)
+        print(request.form)
+        return idols.query.all()
+    else:
+        print(request.args)
+        # 获取pagination对象
+        page = int(request.args.get('page'))
+        per_page = int(request.args.get('limit'))
+        where_id = request.args.get('id', None)
+        where_age = request.args.get('age', None)
+        print( set(request.args))
+        if {'id', 'age'} & set(request.args):
+            wheres = {}
+            if where_id:
+                wheres['id'] = int(where_id)
+            if where_age:
+                wheres['age'] = int(where_age)
+            pagination = idols.query.filter_by(**wheres).paginate(page, per_page=per_page, error_out=False)
+            _count = idols.query.filter_by(**wheres).count()
+        else:
+            pagination = idols.query.paginate(page, per_page=per_page, error_out=False)
+            _count = len(idols.query.all())
+
+        posts = [{"id": x.id, "name": x.name, "height": x.height, "age": x.age, "shows": x.shows} for x
+                 in pagination.items]
+        return {'data': posts, 'count': _count, 'msg': '', 'code': 0}
 
 
 @app.route('/insert', methods=['GET', 'POST'])
